@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark Cris D. Ubana | Web Portfolio</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        heading: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#090d16',
+                            cyan: '#00f2fe',
+                            purple: '#7f00ff',
+                            magenta: '#e100ff',
+                            blue: '#4facfe'
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS for Theme & Interactions -->
+    <style>
+        :root {
+            --glass-bg: rgba(20, 26, 42, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        
+        body {
+            background-color: #090d16;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(140px);
+            z-index: -1;
+            animation: float 20s infinite ease-in-out alternate;
+            opacity: 0.6;
+        }
+        .orb-cyan {
+            width: 45vw; height: 45vw;
+            background: #00f2fe;
+            top: -10%; left: -10%;
+            animation-delay: 0s;
+        }
+        .orb-purple {
+            width: 50vw; height: 50vw;
+            background: #7f00ff;
+            bottom: -20%; right: -10%;
+            animation-delay: -5s;
+        }
+        .orb-magenta {
+            width: 40vw; height: 40vw;
+            background: #e100ff;
+            top: 30%; left: 30%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(5vw, -5vh) scale(1.1); }
+            66% { transform: translate(-3vw, 4vh) scale(0.9); }
+            100% { transform: translate(4vw, 2vh) scale(1.05); }
+        }
+
+        /* Glassmorphism Utilities */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-hover:hover {
+            box-shadow: 0 8px 32px 0 rgba(0, 242, 254, 0.2), inset 0 0 0 1px rgba(0, 242, 254, 0.4);
+            transform: translateY(-5px);
+        }
+        .glass-hover-purple:hover {
+            box-shadow: 0 8px 32px 0 rgba(127, 0, 255, 0.2), inset 0 0 0 1px rgba(127, 0, 255, 0.4);
+            transform: translateY(-5px);
+        }
+
+        /* Navbar Active State */
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background: linear-gradient(90deg, #00f2fe, #7f00ff);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        .nav-link.active {
+            color: #00f2fe;
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.4);
+        }
+
+        /* Glowing Icon Ring */
+        .glow-ring {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #090d16;
+            z-index: 1;
+        }
+        .glow-ring::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #00f2fe, #7f00ff, #e100ff);
+            z-index: -1;
+            filter: blur(8px);
+            animation: spin 3s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Slide-in Modal System */
+        .modal-wrapper {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: flex-end;
+            visibility: hidden;
+        }
+        .modal-wrapper.active {
+            visibility: visible;
+        }
+        .modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(9, 13, 22, 0.8);
+            backdrop-filter: blur(8px);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .modal-wrapper.active .modal-backdrop {
+            opacity: 1;
+        }
+        .modal-panel {
+            position: relative;
+            width: 100%;
+            max-width: 880px;
+            height: 100%;
+            background: #0d121f;
+            border-left: 1px solid rgba(255,255,255,0.1);
+            transform: translateX(100%);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .modal-wrapper.active .modal-panel {
+            transform: translateX(0);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #090d16; }
+        ::-webkit-scrollbar-thumb { background: #7f00ff; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00f2fe; }
+
+        /* Form Input Styles */
+        .glass-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .glass-input:focus {
+            outline: none;
+            border-color: #00f2fe;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+        }
+
+        /* Portfolio Thumbnail Patterns (CSS Only) */
+        .thumb-pattern-1 { background: radial-gradient(circle at top left, #3e2723, #1a100c); }
+        .thumb-pattern-2 { background: linear-gradient(135deg, #7b5836, #3e2723); }
+        .thumb-pattern-3 { background: linear-gradient(135deg, #f5f5f5, #dcdcdc); }
+        .thumb-pattern-4 { background: linear-gradient(to bottom, #991b1b 0%, #090d16 100%); }
+        .thumb-pattern-5 { background: conic-gradient(from 180deg at 50% 50%, #000000, #dc2626, #000000); }
+        .thumb-pattern-6 { background: linear-gradient(135deg, #090d16, #1f2937, #000000); }
+        .thumb-pattern-7 { background: radial-gradient(circle at center, #00f2fe 0%, #09203f 45%, #090d16 100%); }
+    </style>
+</head>
+<body class="relative selection:bg-brand-cyan selection:text-brand-dark">
+
+    <!-- Animated Background Orbs -->
+    <div class="orb orb-cyan"></div>
+    <div class="orb orb-purple"></div>
+    <div class="orb orb-magenta"></div>
+
+    <!-- Navigation (Pages: Home, About, Skills, Portfolio, Contacts) -->
+    <nav class="fixed top-0 left-0 w-full z-50 p-4 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto glass px-6 py-4 flex justify-between items-center">
+            <a href="#home" class="font-heading font-bold text-xl tracking-wider text-white">
+                MCU<span class="text-brand-cyan">.</span>PORTFOLIO
+            </a>
+            
+            <!-- Desktop Nav -->
+            <div class="hidden md:flex gap-8 font-medium text-sm text-gray-300">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#skills" class="nav-link">Skills</a>
+                <a href="#portfolio" class="nav-link">Portfolio</a>
+                <a href="#contacts" class="nav-link">Contacts</a>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="md:hidden text-gray-300 hover:text-white" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars text-2xl"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden absolute top-20 left-4 right-4 glass flex-col p-4 gap-4 text-center md:hidden">
+            <a href="#home" class="nav-link py-2" onclick="toggleMobileMenu()">Home</a>
+            <a href="#about" class="nav-link py-2" onclick="toggleMobileMenu()">About</a>
+            <a href="#skills" class="nav-link py-2" onclick="toggleMobileMenu()">Skills</a>
+            <a href="#portfolio" class="nav-link py-2" onclick="toggleMobileMenu()">Portfolio</a>
+            <a href="#contacts" class="nav-link py-2" onclick="toggleMobileMenu()">Contacts</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- ================= 1. HOME SECTION ================= -->
+        <section id="home" class="min-h-screen flex items-center justify-center pt-24 pb-12 px-6 relative">
+            <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Text Content -->
+                <div class="space-y-8 z-10">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-brand-cyan/30 bg-brand-cyan/10 text-brand-cyan text-sm font-medium backdrop-blur-sm">
+                        <span class="w-2 h-2 rounded-full bg-brand-cyan animate-ping"></span>
+                        BSCS 3CS3 • Portfolio 2026
+                    </div>
+                    <h1 class="font-heading text-5xl md:text-7xl font-bold leading-tight">
+                        Hello, I'm Mark Cris.
+                        <span class="block text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan via-brand-purple to-brand-magenta">
+                            A Computer Science Student.
+                        </span>
+                    </h1>
+                    <p class="text-lg text-gray-300 leading-relaxed max-w-xl">
+                        Aspiring <strong>Software Engineer</strong> and visual storyteller at the <strong>City College of Calamba</strong>—architecting clean backend logic, intuitive UI/UX systems, high-impact print media, and cinematic video productions.
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-4">
+                        <a href="#portfolio" class="px-8 py-4 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-purple text-white font-bold hover:shadow-[0_0_20px_rgba(0,242,254,0.5)] transition-all duration-300 transform hover:-translate-y-1">
+                            Explore Portfolio Works
+                        </a>
+                        <button type="button" onclick="scrollToAndPlayPromo()" class="px-8 py-4 rounded-xl glass glass-hover font-bold text-brand-cyan transition-all duration-300 flex items-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-circle-play"></i> Play Promo Video
+                        </button>
+                        <a href="#contacts" class="px-8 py-4 rounded-xl glass glass-hover font-bold text-white transition-all duration-300 flex items-center justify-center">
+                            Connect With Me
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Visual Element -->
+                <div class="relative flex justify-center lg:justify-end z-10 hidden md:flex">
+                    <div class="glass p-8 w-80 transform rotate-3 hover:rotate-0 transition-transform duration-500 glass-hover-purple relative">
+                        <div class="absolute -top-6 -left-6 w-24 h-24 glow-ring text-3xl text-white shadow-xl">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <div class="pt-12">
+                            <p class="text-[11px] font-bold uppercase tracking-widest text-brand-cyan mb-1">// Value Proposition</p>
+                            <h3 class="font-heading text-2xl font-bold mb-1">Engineering with</h3>
+                            <h3 class="font-heading text-xl text-brand-purple mb-4">Creativity &amp; Precision</h3>
+                            <p class="text-sm text-gray-400">"Every frame tells a story. Every line of code architects reality."</p>
+                            
+                            <div class="mt-6 space-y-3">
+                                <div>
+                                    <div class="flex justify-between text-xs text-gray-400 mb-1"><span>Software Architecture</span><span>98%</span></div>
+                                    <div class="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+                                        <div class="h-full bg-gradient-to-r from-brand-cyan to-brand-purple w-[98%]"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs text-gray-400 mb-1"><span>UI/UX &amp; Graphics</span><span>94%</span></div>
+                                    <div class="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+                                        <div class="h-full bg-gradient-to-r from-brand-purple to-brand-magenta w-[94%]"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs text-gray-400 mb-1"><span>Video Editing &amp; NLE</span><span>95%</span></div>
+                                    <div class="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+                                        <div class="h-full bg-gradient-to-r from-brand-magenta to-brand-cyan w-[95%]"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 2. ABOUT SECTION (WITH PROFILE IMAGE & CLICK-TO-PLAY PROMO VIDEO) ================= -->
+        <section id="about" class="py-24 px-6 relative z-10">
+            <div class="max-w-6xl mx-auto space-y-20">
+                
+                <!-- Bio & Profile Image Row -->
+                <div class="flex flex-col md:flex-row items-center gap-12 md:gap-16">
+                    <!-- Profile Image Side -->
+                    <div class="w-full md:w-2/5 flex justify-center md:justify-end">
+                        <div class="relative w-72 md:w-[22rem] h-96 md:h-[30rem] rounded-2xl overflow-hidden glass p-2 transform -rotate-2 hover:rotate-0 transition-transform duration-500 shadow-2xl glass-hover-purple group">
+                            <img 
+                                src="cdb270ae-642b-456c-8713-003f0b1d83d9.jpg" 
+                                alt="Mark Cris D. Ubana - Computer Science Student & Aspiring Software Engineer" 
+                                class="w-full h-full object-cover object-top rounded-xl border border-white/10 group-hover:scale-105 transition-transform duration-500" 
+                                onerror="this.src='https://placehold.co/400x600/1a1a2e/ffffff?text=Mark+Cris+Ubana'"
+                            >
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#090d16]/90 via-[#090d16]/20 to-transparent rounded-2xl pointer-events-none"></div>
+                            
+                            <!-- Floating Role Badge on Image -->
+                            <div class="absolute bottom-5 left-5 right-5 glass px-4 py-3 rounded-xl border border-white/15 flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-brand-cyan/20 border border-brand-cyan/40 flex items-center justify-center text-brand-cyan shrink-0">
+                                    <i class="fa-solid fa-terminal"></i>
+                                </div>
+                                <div class="text-left">
+                                    <p class="text-xs text-brand-cyan font-bold uppercase tracking-wider">Future Software Engineer</p>
+                                    <p class="text-xs text-gray-300">BS Computer Science • Section 3CS3</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Text Content Side -->
+                    <div class="w-full md:w-3/5 space-y-6 text-center md:text-left">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-purple/20 border border-brand-purple/40 text-brand-cyan text-xs font-semibold uppercase tracking-widest">
+                            <i class="fa-solid fa-laptop-code"></i> Aspiring Software Engineer
+                        </div>
+                        <h2 class="font-heading text-4xl md:text-5xl font-bold">Behind the Screen</h2>
+                        <div class="w-20 h-1 bg-gradient-to-r from-brand-purple to-brand-cyan rounded-full mx-auto md:mx-0"></div>
+                        
+                        <div class="space-y-5 text-gray-300 text-lg leading-relaxed text-justify md:text-left mt-6">
+                            <p>
+                                I am <strong>Mark Cris D. Ubana</strong>, a dedicated <strong>Bachelor of Science in Computer Science student (Section 3CS3) at the City College of Calamba</strong> inspired to become a full-fledged <strong>Software Engineer</strong>. My passion for technology began with curiosity about how digital systems operate behind the scenes and evolved into a commitment to architecting scalable, user-centric software.
+                            </p>
+                            <p>
+                                For me, software engineering is more than just writing lines of code—it is about architecting seamless user experiences, solving complex problems, and building solutions that truly matter. By combining clean backend logic, structured system architecture, intuitive UI/UX design, and dynamic video storytelling, I transform raw technical requirements into reliable products worth experiencing.
+                            </p>
+                        </div>
+
+                        <!-- Highlight Tags -->
+                        <div class="flex flex-wrap justify-center md:justify-start gap-3 pt-2">
+                            <span class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-gray-300 flex items-center gap-2">
+                                <i class="fa-solid fa-code text-brand-cyan"></i> Full-Stack Software Engineering
+                            </span>
+                            <span class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-gray-300 flex items-center gap-2">
+                                <i class="fa-solid fa-bezier-curve text-brand-purple"></i> Intuitive UI/UX Design
+                            </span>
+                            <span class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-gray-300 flex items-center gap-2">
+                                <i class="fa-solid fa-film text-brand-magenta"></i> Multimedia Storytelling
+                            </span>
+                        </div>
+                        
+                        <blockquote class="border-l-4 border-brand-magenta pl-6 py-4 mt-6 bg-white/5 rounded-r-xl inline-block text-left shadow-lg">
+                            <p class="font-heading text-xl md:text-2xl text-white italic font-medium leading-snug">
+                                "Life goes on, keep moving forward.<br>Do it before it's too late."
+                            </p>
+                        </blockquote>
+                    </div>
+                </div>
+
+                <!-- INCLUDED PROMO AD SHOWCASE & INTERACTIVE CLICK-TO-PLAY -->
+                <div id="about-promo" class="glass p-6 md:p-10 border border-brand-cyan/30 shadow-[0_0_40px_rgba(0,242,254,0.1)]">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 border-b border-white/10 pb-6">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-[0.25em] text-brand-cyan block mb-1">
+                                <i class="fa-solid fa-clapperboard mr-1"></i> Included Promotional Advertisement
+                            </span>
+                            <h3 class="font-heading text-2xl md:text-3xl font-bold">
+                                "Every Frame Tells A Story. Every Line of Code Architects Reality."
+                            </h3>
+                        </div>
+                        <button onclick="openModal('modal-p1', true)" class="px-5 py-2.5 rounded-xl bg-brand-cyan/20 border border-brand-cyan/50 text-brand-cyan text-xs font-bold uppercase tracking-wider hover:bg-brand-cyan hover:text-brand-dark transition shrink-0 cursor-pointer">
+                            <i class="fa-solid fa-play mr-1"></i> Open &amp; Play in Modal
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                        <!-- Click-to-Play Video Player Column -->
+                        <div class="lg:col-span-7 space-y-4">
+                            <div class="relative rounded-xl overflow-hidden border border-white/15 bg-black shadow-2xl group">
+                                <video 
+                                    id="about-promo-video" 
+                                    controls 
+                                    preload="metadata"
+                                    class="w-full aspect-video cursor-pointer"
+                                    onclick="toggleVideoPlay('about-promo-video', 'about-video-overlay')"
+                                >
+                                    <source src="CS3_ CEEL 301 - 2026_10_31 - RECORDING.mp4" type="video/mp4">
+                                    <source src="CS3_ CEEL 301 - 2026_10_31 - RECORDING_2.mp4" type="video/mp4">
+                                    Your browser does not support HTML5 video.
+                                </video>
+
+                                <!-- Interactive Click-to-Play Overlay -->
+                                <div 
+                                    id="about-video-overlay" 
+                                    onclick="playVideoWithOverlay('about-promo-video', 'about-video-overlay')"
+                                    class="absolute inset-0 bg-[#090d16]/60 backdrop-blur-[2px] flex flex-col items-center justify-center cursor-pointer transition-opacity duration-300 z-10"
+                                >
+                                    <div class="w-20 h-20 rounded-full bg-brand-cyan/25 border-2 border-brand-cyan flex items-center justify-center shadow-[0_0_30px_rgba(0,242,254,0.6)] group-hover:scale-110 transition-transform">
+                                        <i class="fa-solid fa-play text-white text-3xl ml-1"></i>
+                                    </div>
+                                    <span class="mt-4 px-4 py-1.5 rounded-full bg-black/70 border border-brand-cyan/40 text-brand-cyan text-xs font-bold uppercase tracking-widest">
+                                        Click to Play Promotional Video
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap justify-between items-center text-xs text-gray-400 px-1 gap-2">
+                                <span><strong>Presenter:</strong> Mark Cris D. Ubana (BSCS — Section 3CS3)</span>
+                                <span><strong>Format:</strong> 60FPS Telemetry HUD &amp; Studio Presentation</span>
+                            </div>
+                        </div>
+
+                        <!-- Explanation & Storyboard Breakdown Column -->
+                        <div class="lg:col-span-5 space-y-4">
+                            <h4 class="font-heading text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-circle-info text-brand-cyan"></i> About This Promotional Video
+                            </h4>
+                            <p class="text-sm text-gray-300 leading-relaxed text-justify">
+                                This personal promotional advertisement introduces my identity as an aspiring <strong>Software Engineer</strong> and <strong>Video Editor</strong> from <strong>Section 3CS3</strong> at the <strong>City College of Calamba</strong>. Designed with a futuristic telemetry HUD interface, it demonstrates how creative visual storytelling and rigorous software architecture work together.
+                            </p>
+
+                            <!-- Sequence Timeline Cards -->
+                            <div class="space-y-2.5 text-xs">
+                                <div class="p-3 rounded-lg bg-white/5 border border-white/10">
+                                    <span class="text-brand-cyan font-bold">00:00 – 00:14 • The Hook &amp; Identity:</span>
+                                    <p class="text-gray-300 mt-1">Opens with <em>"Every Frame Tells A Story. Every Line of Code Architects Reality."</em> and introduces my passion for video editing and bringing creative ideas to life through visuals.</p>
+                                </div>
+                                <div class="p-3 rounded-lg bg-white/5 border border-white/10">
+                                    <span class="text-brand-purple font-bold">00:15 – 00:34 • Software Architecture &amp; Workstation Studio:</span>
+                                    <p class="text-gray-300 mt-1">Showcases 4 live technical views: <strong>Code IDE</strong> (<code>DistributedEngine.ts</code> with 98.4% test coverage &amp; 99.98% uptime), <strong>Microservices Topology</strong> (React/Next.js → Node/Express → PostgreSQL → Redis), <strong>Multi-Layer NLE Timeline</strong>, and <strong>Performance Benchmarks</strong> (840ms reduced to 24ms — 97% latency reduction &amp; 40x throughput).</p>
+                                </div>
+                                <div class="p-3 rounded-lg bg-white/5 border border-white/10">
+                                    <span class="text-brand-magenta font-bold">00:35 – 01:07 • Value Proposition &amp; Call to Action:</span>
+                                    <p class="text-gray-300 mt-1">Highlights my 4 core pillars (<strong>Creativity, Precision, Storytelling, Video Editing</strong>) across Full-Stack Systems, Intuitive UI/UX, and Multimedia Storytelling, closing with: <em>"Let's turn your vision into reality today."</em></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= 3. SKILLS SECTION (PROGRAMMING, GRAPHICS, NETWORK ETC.) ================= -->
+        <section id="skills" class="py-24 px-6 relative z-10 bg-brand-dark/50">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="font-heading text-4xl md:text-5xl font-bold mb-4">Technical &amp; Creative Arsenal</h2>
+                    <p class="text-gray-400 max-w-2xl mx-auto">Core competencies across software programming, graphics &amp; multimedia production, and networking &amp; system architecture.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Column 1: Programming & Software Engineering -->
+                    <div class="glass glass-hover p-8">
+                        <div class="w-14 h-14 rounded-2xl bg-brand-cyan/20 flex items-center justify-center text-brand-cyan text-2xl mb-6 shadow-[0_0_15px_rgba(0,242,254,0.3)]">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold mb-2">Programming &amp; Dev</h3>
+                        <p class="text-xs text-brand-cyan uppercase tracking-wider font-semibold mb-6">Full-Stack &amp; Software Architecture</p>
+                        <ul class="space-y-3.5 text-gray-300 text-sm">
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-brand-cyan mt-1"></i>
+                                <span><strong>Languages:</strong> Java, Python, Dart, JavaScript, TypeScript, x86 Assembly</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-brand-cyan mt-1"></i>
+                                <span><strong>Web &amp; Front-End:</strong> HTML5, CSS3, Tailwind CSS, React / Next.js</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-brand-cyan mt-1"></i>
+                                <span><strong>Backend &amp; APIs:</strong> Node.js / Express, Clean Architecture, Modular Logic</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-brand-cyan mt-1"></i>
+                                <span><strong>Quality Assurance:</strong> ISO/IEC 25010 Testing &amp; Performance Optimization</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 2: Graphics, UI/UX & Multimedia -->
+                    <div class="glass glass-hover-purple p-8">
+                        <div class="w-14 h-14 rounded-2xl bg-brand-purple/20 flex items-center justify-center text-brand-purple text-2xl mb-6 shadow-[0_0_15px_rgba(127,0,255,0.3)]">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold mb-2">Graphics &amp; UI/UX</h3>
+                        <p class="text-xs text-brand-purple uppercase tracking-wider font-semibold mb-6">Print Media, Figma &amp; Video Editing</p>
+                        <ul class="space-y-3.5 text-gray-300 text-sm">
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-brand-purple mt-1"></i>
+                                <span><strong>Print &amp; Editorial:</strong> Flyers, Window Posters, Menus &amp; Magazine Spreads</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-brand-purple mt-1"></i>
+                                <span><strong>UI/UX Prototyping:</strong> Figma Design Systems, Wireframes &amp; User Flows</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-brand-purple mt-1"></i>
+                                <span><strong>Video Production:</strong> Multi-Layer NLE Editing, Motion Graphics &amp; VFX</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-brand-purple mt-1"></i>
+                                <span><strong>Color Grading:</strong> Adobe Lightroom Presets &amp; Color Scopes</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 3: Networking, Databases & Strategy -->
+                    <div class="glass glass-hover p-8 hover:shadow-[0_8px_32px_0_rgba(225,0,255,0.2)] hover:border-brand-magenta/40">
+                        <div class="w-14 h-14 rounded-2xl bg-brand-magenta/20 flex items-center justify-center text-brand-magenta text-2xl mb-6 shadow-[0_0_15px_rgba(225,0,255,0.3)]">
+                            <i class="fa-solid fa-network-wired"></i>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold mb-2">Network, Data &amp; Strategy</h3>
+                        <p class="text-xs text-brand-magenta uppercase tracking-wider font-semibold mb-6">Infrastructure, Databases &amp; Proposals</p>
+                        <ul class="space-y-3.5 text-gray-300 text-sm">
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-brand-magenta mt-1"></i>
+                                <span><strong>Cloud &amp; Networking:</strong> API Gateways, Microservices &amp; Data Topology</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-brand-magenta mt-1"></i>
+                                <span><strong>Databases &amp; Caching:</strong> PostgreSQL (ACID), SQLite &amp; Redis Sub-ms Cache</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-brand-magenta mt-1"></i>
+                                <span><strong>Data Analytics:</strong> Python Statistical Modeling (NumPy, SciPy, Matplotlib)</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-brand-magenta mt-1"></i>
+                                <span><strong>Brand Strategy:</strong> Client Service Proposals &amp; Target Audience Rationale</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 4. PORTFOLIO SECTION (ALL PDFS, GRAPHICS & VIDEO OUTPUTS) ================= -->
+        <section id="portfolio" class="py-24 px-6 relative z-10">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                    <div>
+                        <h2 class="font-heading text-4xl md:text-5xl font-bold mb-4">Selected Works &amp; Outputs</h2>
+                        <div class="w-20 h-1 bg-gradient-to-r from-brand-cyan to-brand-purple rounded-full"></div>
+                    </div>
+                    <p class="text-gray-400 max-w-md md:text-right">All output activities in Graphics, Video Production, Print Media PDFs, Editorial Magazine Layouts, and UI Systems.</p>
+                </div>
+
+                <!-- Portfolio Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Card 1: Promotional Video (Click to Open & Play) -->
+                    <div class="glass glass-hover cursor-pointer group overflow-hidden rounded-[20px] flex flex-col" onclick="openModal('modal-p1', true)">
+                        <div class="h-56 w-full thumb-pattern-7 relative overflow-hidden flex flex-col items-center justify-center p-4">
+                            <div class="absolute inset-0 bg-[#090d16]/50 group-hover:bg-[#090d16]/20 transition-all duration-300"></div>
+                            <div class="absolute top-3 left-3 px-2.5 py-1 rounded bg-black/60 border border-brand-cyan/40 text-[10px] font-bold text-brand-cyan tracking-widest uppercase z-10">
+                                ● CLICK TO PLAY 60FPS
+                            </div>
+                            <div class="w-16 h-16 rounded-full bg-brand-cyan/20 border-2 border-brand-cyan backdrop-blur-md flex items-center justify-center relative z-10 group-hover:scale-110 transition-transform shadow-[0_0_25px_rgba(0,242,254,0.5)]">
+                                <i class="fa-solid fa-play text-white ml-1 text-xl"></i>
+                            </div>
+                            <p class="text-[11px] font-heading font-bold tracking-widest uppercase text-white mt-3 relative z-10 text-center">
+                                EVERY FRAME TELLS A STORY
+                            </p>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-heading text-xl font-bold mb-2">Promotional Video Ad</h3>
+                                <p class="text-sm text-gray-400 mb-4 line-clamp-2">Cinematic personal promo ad showcasing Software Architecture, NLE Timeline, and Value Proposition.</p>
+                            </div>
+                            <div class="flex items-center text-brand-cyan text-sm font-bold gap-2">
+                                Click to Play Video <i class="fa-solid fa-play transform group-hover:translate-x-2 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Tambayan Proposal (SERVICE PROPOSAL DOCUMENT.pdf) -->
+                    <div class="glass glass-hover cursor-pointer group overflow-hidden rounded-[20px] flex flex-col" onclick="openModal('modal-p2')">
+                        <div class="h-56 w-full thumb-pattern-1 relative overflow-hidden flex flex-col items-center justify-center p-4">
+                            <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all duration-300"></div>
+                            <span class="text-xs uppercase tracking-widest text-amber-200/70 relative z-10 mb-1">Mock Proposal PDF</span>
+                            <div class="text-white/90 text-3xl font-serif font-bold italic relative z-10">Tambayan Café</div>
+                            <span class="text-[11px] text-white/60 relative z-10 mt-1">Flyer &amp; Poster Design Proposal (2 Pages)</span>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-heading text-xl font-bold mb-2">Tambayan Café Proposal</h3>
+                                <p class="text-sm text-gray-400 mb-4 line-clamp-2">Complete 2-page client service proposal detailing deliverables and why print media matters.</p>
+                            </div>
+                            <div class="flex items-center text-brand-cyan text-sm font-bold gap-2">
+                                View All Pages &amp; PDF <i class="fa-solid fa-arrow-right transform group-hover:translate-x-2 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Tambayan Menu Flyer (FLYER.pdf) -->
+                    <div class="glass glass-hover cursor-pointer group overflow-hidden rounded-[20px] flex flex-col" onclick="openModal('modal-p3')">
+                        <div class="h-56 w-full thumb-pattern-2 relative overflow-hidden flex flex-col items-center justify-center">
+                            <div class="absolute inset-0 bg-black/30 group-hover:bg-transparent transition-all duration-300"></div>
+                            <i class="fa-solid fa-mug-hot text-white/90 text-4xl mb-2 relative z-10"></i>
+                            <span class="font-heading font-extrabold text-amber-200 tracking-widest text-lg relative z-10">COFFEE</span>
+                            <span class="text-[10px] text-white/80 tracking-widest uppercase relative z-10">OPEN DAILY • 9 AM TO 10 PM</span>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-heading text-xl font-bold mb-2">Tambayan Café Menu Flyer</h3>
+                                <p class="text-sm text-gray-400 mb-4 line-clamp-2">Handheld coffee-brown menu flyer featuring store hours and itemized espresso prices.</p>
+                            </div>
+                            <div class="flex items-center text-brand-cyan text-sm font-bold gap-2">
+                                View Flyer &amp; PDF <i class="fa-solid fa-arrow-right transform group-hover:translate-x-2 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Tambayan Display Poster (POSTER.pdf) -->
+                    <div class="glass glass-hover cursor-pointer group overflow-hidden rounded-[20px] flex flex-col" onclick="openModal('modal-p4')">
+                        <div class="h-56 w-full thumb-pattern-3 relative overflow-hidden flex flex-col items-center justify-center">
+                            <div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-all duration-300"></div>
+                            <span class="font-serif italic text-2xl text-[#4e342e] font-bold relative z-10">coffee shop</span>
+                            <div class="mt-2 px-4 py-1.5 rounded-full bg-[#4e342e] text-white font-bold text-xs uppercase tracking-widest relative z-10 shadow">
+                                Tambayan Café
+                            </div>
+                            <span class="text-[10px] text-[#4e342e] font-bold tracking-widest mt-2 relative z-10">OPEN DAILY • 09:00 AM – 10:00 PM</span>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-heading text-xl font-bold mb-2">Tambayan Café Poster</h3>
+                                <p class="text-sm text-gray-400 mb-4 line-clamp-2">Clean white window display poster with bold retro-inspired brown emblem typography.</p>
+                            </div>
+                            <div class="flex items-center text-brand-cyan text-sm font-bold gap-2">
+                                View Poster &amp; PDF <i class="fa-solid fa-arrow-right transform group-hover:translate-x-2 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: CLASSIC Magazine (UBANA_MagazineME (1).pdf) -->
+                    <div class="glass glass-hover-purple cursor-pointer group overflow-hidden rounded-[20px] flex flex-col" onclick="openModal('modal-p5')">
+                        <div class="h-56 w-full thumb-pattern-4 relative overflow-hidden flex flex-col items-center justify-center p-4">
+                            <div class="absolute inset-0 bg-black/30 group-hover:bg-transparent transition-all duration-300"></div>
+                            <h2 class="text-red-500 font-heading font-black text-5xl tracking-tighter uppercase relative z-10 drop-shadow">CLASSIC</h2>
+                            <span class="text-white/80 text-xs font-bold tracking-widest mt-1 relative z-10">VOL. 01 • SEPTEMBER 2026</span>
+                            <span class="text-white/50 text-[10px] uppercase tracking-widest mt-2 relative z-10">Full 4-Page Magazine Spread</span>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-heading text-xl font-bold mb-2">CLASSIC Editorial Magazine</h3>
+                                <p class="text-sm text-gray-400 mb-4 line-clamp-2">4-page publication featuring Cover, About Me, Achievements, Goals, and Lifestyle spreads.</p>
+                            </div>
+                            <div class="flex items-center text-brand-purple text-sm font-bold gap-2">
+                                View All 4 Pages &amp; PDF <i class="fa-solid fa-arrow-right transform group-hover:translate-x-2 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 6: FITNESS TO MAX (MIDTERM_UBANA_CS3 (1).pdf) -->
+                    <div class="glass glass-hover-purple cursor-pointer group overflow-hidden rounded-[20px] flex flex-col" onclick="openModal('modal-p6')">
+                        <div class="h-56 w-full thumb-pattern-5 relative overflow-hidden flex flex-col justify-end p-6">
+                            <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all duration-300"></div>
+                            <div class="border-l-4 border-red-600 pl-3 relative z-10">
+                                <div class="text-red-500 text-[10px] font-bold tracking-[0.25em] uppercase">EST. 2026 • PERFORMANCE TRAINING</div>
+                                <div class="text-white font-black text-3xl uppercase italic tracking-tighter leading-none mt-1">FITNESS TO MAX</div>
+                            </div>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-heading text-xl font-bold mb-2">FITNESS TO MAX Poster</h3>
+                                <p class="text-sm text-gray-400 mb-4 line-clamp-2">High-impact performance training poster featuring The Method, Schedule, and Creed.</p>
+                            </div>
+                            <div class="flex items-center text-brand-purple text-sm font-bold gap-2">
+                                View Poster &amp; PDF <i class="fa-solid fa-arrow-right transform group-hover:translate-x-2 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 7: URBAN THREADS Digital Campaign -->
+                    <div class="glass glass-hover cursor-pointer group overflow-hidden rounded-[20px] flex flex-col" onclick="openModal('modal-p7')">
+                        <div class="h-56 w-full thumb-pattern-6 relative overflow-hidden flex items-center justify-center">
+                            <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all duration-300"></div>
+                            <h2 class="text-white/30 font-heading font-black text-3xl tracking-widest uppercase relative z-10 transform -rotate-12">URBAN<br>THREADS</h2>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-heading text-xl font-bold mb-2">URBAN THREADS Campaign</h3>
+                                <p class="text-sm text-gray-400 mb-4 line-clamp-2">Streetwear brand UI system with hero landing page, product catalog, and newsletter banner.</p>
+                            </div>
+                            <div class="flex items-center text-brand-cyan text-sm font-bold gap-2">
+                                View UI System <i class="fa-solid fa-arrow-right transform group-hover:translate-x-2 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 5. CONTACTS SECTION (GMAIL, FACEBOOK, INSTAGRAM + SIMPLE FORM) ================= -->
+        <section id="contacts" class="py-24 px-6 relative z-10 bg-brand-dark/60">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-brand-cyan/30 bg-brand-cyan/10 text-brand-cyan text-xs font-bold uppercase tracking-widest mb-4">
+                        <i class="fa-solid fa-bolt"></i> Final Promotional Call To Action
+                    </div>
+                    <h2 class="font-heading text-4xl md:text-5xl font-bold mb-4">How You Can Connect With Me</h2>
+                    <p class="text-gray-400 max-w-2xl mx-auto">
+                        "If you have an idea, let's build the architecture, design the interface, and create a product worth experiencing."
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+                    
+                    <!-- Left Column: Developer Profile & Direct Social Links (Gmail, Facebook, Instagram Only) -->
+                    <div class="lg:col-span-5 glass p-8 md:p-10 border border-brand-cyan/30 flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute -top-16 -right-16 w-44 h-44 bg-brand-cyan/15 rounded-full blur-3xl pointer-events-none"></div>
+                        
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-[0.25em] text-brand-cyan mb-2">
+                                <i class="fa-solid fa-id-badge mr-1"></i> Official Developer Profile
+                            </p>
+                            <h3 class="font-heading text-3xl md:text-4xl font-bold tracking-tight uppercase">
+                                MARK CRIS D. UBANA
+                            </h3>
+                            <p class="text-brand-cyan font-bold text-sm tracking-[0.2em] uppercase mt-1 mb-6">
+                                Software Engineer &amp; Visual Director
+                            </p>
+
+                            <div class="p-4 rounded-xl bg-white/5 border-l-4 border-brand-cyan mb-8">
+                                <p class="font-heading text-sm font-bold uppercase tracking-wider text-white">
+                                    "LET'S TURN YOUR VISION INTO REALITY TODAY."
+                                </p>
+                            </div>
+
+                            <!-- Structured Details Table -->
+                            <div class="space-y-4 text-sm border-t border-white/10 pt-6">
+                                <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                                    <span class="text-xs uppercase tracking-widest text-gray-400">PROGRAM:</span>
+                                    <span class="font-bold text-white">BS COMPUTER SCIENCE</span>
+                                </div>
+                                <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                                    <span class="text-xs uppercase tracking-widest text-gray-400">SECTION:</span>
+                                    <span class="font-bold text-brand-cyan">3CS3</span>
+                                </div>
+                                <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                                    <span class="text-xs uppercase tracking-widest text-gray-400">INSTITUTION:</span>
+                                    <span class="font-bold text-white">City College of Calamba</span>
+                                </div>
+                                <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                                    <span class="text-xs uppercase tracking-widest text-gray-400">LOCATION:</span>
+                                    <span class="font-bold text-white">Calamba City, Laguna</span>
+                                </div>
+                                <div class="flex justify-between items-center pb-1">
+                                    <span class="text-xs uppercase tracking-widest text-gray-400">GMAIL:</span>
+                                    <a href="mailto:markcris.ubana@gmail.com" class="font-bold text-brand-cyan hover:underline">markcris.ubana@gmail.com</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Direct Social Links: Gmail, Facebook, Instagram -->
+                        <div class="pt-8 mt-8 border-t border-white/10">
+                            <p class="text-xs uppercase tracking-widest text-gray-400 mb-4">Direct Social Channels</p>
+                            <div class="grid grid-cols-3 gap-3">
+                                <!-- Gmail Account Link -->
+                                <a href="mailto:markcris.ubana@gmail.com" class="p-3.5 rounded-xl bg-white/5 hover:bg-red-500/20 border border-white/10 hover:border-red-400/50 flex flex-col items-center justify-center gap-1.5 transition group">
+                                    <i class="fa-solid fa-envelope text-xl text-red-400 group-hover:scale-110 transition-transform"></i>
+                                    <span class="text-xs font-bold">Gmail</span>
+                                </a>
+                                <!-- Facebook Profile Link -->
+                                <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" class="p-3.5 rounded-xl bg-white/5 hover:bg-brand-cyan/20 border border-white/10 hover:border-brand-cyan/50 flex flex-col items-center justify-center gap-1.5 transition group">
+                                    <i class="fa-brands fa-facebook text-xl text-brand-cyan group-hover:scale-110 transition-transform"></i>
+                                    <span class="text-xs font-bold">Facebook</span>
+                                </a>
+                                <!-- Instagram Profile Link -->
+                                <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="p-3.5 rounded-xl bg-white/5 hover:bg-brand-magenta/20 border border-white/10 hover:border-brand-magenta/50 flex flex-col items-center justify-center gap-1.5 transition group">
+                                    <i class="fa-brands fa-instagram text-xl text-brand-magenta group-hover:scale-110 transition-transform"></i>
+                                    <span class="text-xs font-bold">Instagram</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Clean Direct Message Form (Collaboration Topic Removed) -->
+                    <div class="lg:col-span-7 glass p-8 md:p-10 relative overflow-hidden flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-heading text-2xl md:text-3xl font-bold mb-2">Send a Direct Message</h3>
+                            <p class="text-sm text-gray-400 mb-8">
+                                Have a question, project idea, or message? Fill out the fields below or reach out directly via Gmail at <strong>markcris.ubana@gmail.com</strong>.
+                            </p>
+
+                            <form onsubmit="handleFormSubmit(event)" class="space-y-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div>
+                                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Your Name</label>
+                                        <input type="text" required placeholder="Enter your full name" class="w-full px-4 py-3.5 rounded-xl glass-input text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Email Address</label>
+                                        <input type="email" required placeholder="name@gmail.com" class="w-full px-4 py-3.5 rounded-xl glass-input text-sm">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Message</label>
+                                    <textarea rows="6" required placeholder="Write your message here..." class="w-full px-4 py-3.5 rounded-xl glass-input text-sm"></textarea>
+                                </div>
+
+                                <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-purple text-white font-bold uppercase tracking-wider text-sm hover:shadow-[0_0_25px_rgba(0,242,254,0.4)] transition-all cursor-pointer">
+                                    <i class="fa-solid fa-paper-plane mr-2"></i> Send Message
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Form Success Overlay -->
+                        <div id="form-success" class="hidden absolute inset-0 bg-[#090d16]/95 backdrop-blur-md p-8 flex-col items-center justify-center text-center z-20">
+                            <div class="w-16 h-16 rounded-full bg-brand-cyan/20 border border-brand-cyan flex items-center justify-center text-brand-cyan text-3xl mb-4">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <h4 class="font-heading text-2xl font-bold mb-2">Message Sent!</h4>
+                            <p class="text-sm text-gray-300 max-w-md mb-6">
+                                Thank you for reaching out to Mark Cris D. Ubana (markcris.ubana@gmail.com). Your message has been received.
+                            </p>
+                            <button onclick="closeFormSuccess()" class="px-6 py-2.5 rounded-xl bg-brand-cyan text-brand-dark font-bold text-xs uppercase tracking-wider cursor-pointer">
+                                Send Another Message
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <footer class="py-8 text-center text-gray-500 text-sm border-t border-white/5 relative z-10">
+            <p>&copy; 2026 Mark Cris D. Ubana (BSCS 3CS3 • City College of Calamba). All Rights Reserved.</p>
+        </footer>
+    </main>
+
+    <!-- ================= MODALS (ALL PAGES & PDF FILES INCLUDED) ================= -->
+
+    <!-- Modal P1: Promotional Video & Full Storyboard Breakdown -->
+    <div id="modal-p1" class="modal-wrapper">
+        <div class="modal-backdrop" onclick="closeModal('modal-p1')"></div>
+        <div class="modal-panel">
+            <div class="sticky top-0 bg-[#0d121f]/95 backdrop-blur border-b border-white/10 p-4 flex justify-between items-center z-20">
+                <h3 class="font-heading font-bold text-lg">Promotional Advertisement Video &amp; Breakdown</h3>
+                <button onclick="closeModal('modal-p1')" class="w-10 h-10 rounded-full bg-white/5 hover:bg-white/20 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6 md:p-10 space-y-8">
+                <!-- Click-to-Play Modal Video Player -->
+                <div class="relative w-full border border-brand-cyan/30 rounded-xl overflow-hidden shadow-[0_0_40px_rgba(0,242,254,0.15)] bg-black group">
+                    <video 
+                        id="modal-promo-video" 
+                        controls 
+                        preload="metadata"
+                        class="w-full aspect-video cursor-pointer"
+                        onclick="toggleVideoPlay('modal-promo-video', 'modal-video-overlay')"
+                    >
+                        <source src="CS3_ CEEL 301 - 2026_10_31 - RECORDING.mp4" type="video/mp4">
+                        <source src="CS3_ CEEL 301 - 2026_10_31 - RECORDING_2.mp4" type="video/mp4">
+                    </video>
+
+                    <div 
+                        id="modal-video-overlay" 
+                        onclick="playVideoWithOverlay('modal-promo-video', 'modal-video-overlay')"
+                        class="absolute inset-0 bg-[#090d16]/55 backdrop-blur-[2px] flex flex-col items-center justify-center cursor-pointer transition-opacity duration-300 z-10"
+                    >
+                        <div class="w-20 h-20 rounded-full bg-brand-cyan/25 border-2 border-brand-cyan flex items-center justify-center shadow-[0_0_30px_rgba(0,242,254,0.6)] group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-play text-white text-3xl ml-1"></i>
+                        </div>
+                        <span class="mt-4 px-4 py-1.5 rounded-full bg-black/75 border border-brand-cyan/40 text-brand-cyan text-xs font-bold uppercase tracking-widest">
+                            Click to Play Video
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Detailed Explanation of the Promotional Video -->
+                <div class="space-y-6">
+                    <div class="border-l-4 border-brand-cyan pl-4">
+                        <p class="text-xs font-bold uppercase tracking-widest text-brand-cyan">Cinematic Promotional Sequence 01</p>
+                        <h4 class="font-heading text-2xl font-bold mt-1">"Every Frame Tells A Story. Every Line of Code Architects Reality."</h4>
+                        <p class="text-sm text-gray-400 mt-1">Official Presenter: <strong>Mark Cris D. Ubana</strong> • BS Computer Science — Section 3CS3 • City College of Calamba • Contact: <strong>markcris.ubana@gmail.com</strong></p>
+                    </div>
+
+                    <!-- Sequence-by-Sequence Breakdown -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div class="p-5 rounded-xl bg-white/5 border border-white/10">
+                            <span class="text-xs font-bold text-brand-cyan uppercase tracking-wider">01 • Identity &amp; Hook (00:00 – 00:14)</span>
+                            <p class="text-gray-300 mt-2 italic">
+                                "Hi I'm Mark Cris D. Ubana from section 3CS3. I'm passionate about video editing and bringing creative ideas to life through visuals."
+                            </p>
+                        </div>
+
+                        <div class="p-5 rounded-xl bg-white/5 border border-white/10">
+                            <span class="text-xs font-bold text-brand-purple uppercase tracking-wider">02 • Workstation Studio (00:15 – 00:34)</span>
+                            <p class="text-gray-300 mt-2 italic">
+                                "Software engineering is more than just writing lines of code. It's about architecting seamless user experiences, solving complex problems, and building solutions that truly matter. I work with robust backend logic, clean architecture, intuitive UI/UX, and scalable systems to turn complex challenges into reliable software."
+                            </p>
+                        </div>
+
+                        <div class="p-5 rounded-xl bg-white/5 border border-white/10">
+                            <span class="text-xs font-bold text-brand-magenta uppercase tracking-wider">03 • Value Proposition (00:35 – 00:49)</span>
+                            <p class="text-gray-300 mt-2 italic">
+                                "My goal is to transform raw requirements and technical challenges into engaging, user-centric software through creative engineering and thoughtful design."
+                            </p>
+                        </div>
+
+                        <div class="p-5 rounded-xl bg-white/5 border border-white/10">
+                            <span class="text-xs font-bold text-brand-cyan uppercase tracking-wider">04 • Call to Action (00:50 – 01:07)</span>
+                            <p class="text-gray-300 mt-2 italic">
+                                "If you have an idea, let's build the architecture, design the interface, and create a product worth experiencing."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal P2: Tambayan Café Proposal (SERVICE PROPOSAL DOCUMENT.pdf) -->
+    <div id="modal-p2" class="modal-wrapper">
+        <div class="modal-backdrop" onclick="closeModal('modal-p2')"></div>
+        <div class="modal-panel">
+            <div class="sticky top-0 bg-[#0d121f]/95 backdrop-blur border-b border-white/10 p-4 flex flex-wrap justify-between items-center gap-3 z-20">
+                <h3 class="font-heading font-bold text-lg">Tambayan Café Service Proposal (2 Pages)</h3>
+                <div class="flex items-center gap-2">
+                    <button onclick="switchView('p2', 'design')" id="btn-p2-design" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-cyan text-brand-dark transition cursor-pointer">All Pages View</button>
+                    <button onclick="switchView('p2', 'pdf')" id="btn-p2-pdf" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 text-white hover:bg-white/20 transition cursor-pointer">Original PDF File</button>
+                    <a href="SERVICE PROPOSAL DOCUMENT.pdf" target="_blank" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-purple/30 border border-brand-purple/50 text-white hover:bg-brand-purple/50 transition"><i class="fa-solid fa-up-right-from-square mr-1"></i>Open PDF</a>
+                    <button onclick="closeModal('modal-p2')" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/20 flex items-center justify-center transition-colors">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="view-p2-design" class="p-6 md:p-10 space-y-8">
+                <!-- Page 1 -->
+                <div class="bg-[#faf8f5] text-gray-900 p-8 md:p-12 rounded-lg shadow-2xl mx-auto max-w-2xl border-t-8 border-[#4e342e]">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-[#4e342e]/20 pb-6 mb-6 gap-4">
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-[#7b5836] font-bold">Mock Proposal for</p>
+                            <h1 class="text-4xl font-extrabold text-[#3e2723] font-serif mt-1">Tambayan Café</h1>
+                            <p class="text-sm text-gray-600 italic mt-1">Flyer and poster design proposal</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="bg-[#4e342e] text-[#f5f5dc] p-3 rounded text-xs max-w-[140px] shadow">
+                                <strong class="block font-serif">Tambayan Café</strong>
+                                <span class="text-[11px] opacity-80">Your cozy place to slow down and stay while</span>
+                            </div>
+                            <div class="bg-[#ede0d4] text-[#3e2723] p-3 rounded text-xs max-w-[140px] border border-[#4e342e]/20 shadow">
+                                <strong class="block font-serif">Tambayan Café</strong>
+                                <span class="text-[11px]">Good coffee. Better company.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#ede0d4]/60 p-4 rounded-md mb-6 text-sm border-l-4 border-[#4e342e]">
+                        <h2 class="font-bold text-[#3e2723] uppercase tracking-wider text-xs mb-1">Project Proposal</h2>
+                        <p><strong>Prepared by:</strong> Mark Cris Ubana</p>
+                        <p><strong>Clients:</strong> Students, Friends &amp; Family</p>
+                    </div>
+
+                    <h2 class="text-xl font-bold text-[#3e2723] mt-6 mb-2">Introduction</h2>
+                    <p class="mb-6 leading-relaxed text-gray-800 text-justify">
+                        I'm excited to help you design a matching flyer and poster set that truly feels like Tambayan Café. My goal is to capture the cozy, welcoming atmosphere where students come to study, and friends and families gather to catch up. Through clean visuals and friendly, clear messaging, we'll make sure your best menu offers stand out, instantly grab attention, and give people a great reason to drop by, order their favorite treats, or hang out.
+                    </p>
+
+                    <h2 class="text-xl font-bold text-[#3e2723] mt-6 mb-3">Deliverables</h2>
+                    <div class="space-y-4 text-gray-800 text-justify leading-relaxed">
+                        <p>
+                            <strong class="text-[#3e2723]">Flyer –</strong> The first deliverable is a handheld menu flyer featuring an earthy coffee-brown background, minimalist coffee cup illustration, and floating coffee bean graphics. Designed for quick reference, it clearly highlights the café name (Tambayan Café), daily store hours (9 AM to 10 PM), and an itemized price list for core espresso drinks—Espresso (PHP 110), Americano (PHP 120), Cappuccino (PHP 150), Latte (PHP 130), and Mocha (PHP 140)—making it easy for students to check budget-friendly options.
+                        </p>
+                        <p>
+                            <strong class="text-[#3e2723]">Poster –</strong> The second deliverable is an eye-catching display poster built on a clean white background with bold, retro-inspired typography reading "coffee shop" and a central brown emblem for Tambayan Café. It uses prominent coffee bean illustrations, a badge highlighting "OPEN DAILY", and the schedule (09:00 AM - 10:00 PM) to serve as an inviting, high-contrast window advertisement that catches the attention of students and passersby.
+                        </p>
+                    </div>
+                    <div class="text-right text-[10px] uppercase tracking-widest text-gray-400 mt-6">Page 01 of 02</div>
+                </div>
+
+                <!-- Page 2 -->
+                <div class="bg-[#faf8f5] text-gray-900 p-8 md:p-12 rounded-lg shadow-2xl mx-auto max-w-2xl border-t-8 border-[#4e342e]">
+                    <h2 class="text-2xl font-bold text-[#3e2723] mb-6 border-b border-[#4e342e]/20 pb-3">Why Print Media Matters for Tambayan Café</h2>
+                    <ul class="space-y-5 text-gray-800 leading-relaxed text-justify">
+                        <li class="flex items-start gap-3">
+                            <span class="text-[#7b5836] font-bold text-lg">•</span>
+                            <span><strong>It catches students and locals right where they are:</strong> Handing out flyers or putting up window posters immediately grabs the attention of people already walking past campus or around the neighborhood who are looking for a quick caffeine fix or a place to study.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-[#7b5836] font-bold text-lg">•</span>
+                            <span><strong>It builds everyday brand recognition:</strong> When students see the same cool poster on their daily walk to class or keep a menu flyer on their desk, Tambayan Café naturally becomes the go-to spot whenever someone asks, "Where should we hang out?"</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-[#7b5836] font-bold text-lg">•</span>
+                            <span><strong>It doesn't rely on social media algorithms:</strong> Unlike an Instagram post that gets buried in a feed after a few hours, a physical poster on a bulletin board or a flyer pinned in a dorm stays visible for weeks without needing likes or shares to be seen.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-[#7b5836] font-bold text-lg">•</span>
+                            <span><strong>It gives a clear call to action:</strong> A simple, well-made print piece that gives people a direct reason to drop by—whether that's checking out the affordable price list, trying a daily brew, or coming in during opening hours to finish a group project.</span>
+                        </li>
+                    </ul>
+                    <div class="text-right text-[10px] uppercase tracking-widest text-gray-400 mt-6">Page 02 of 02</div>
+                </div>
+            </div>
+
+            <div id="view-p2-pdf" class="hidden p-6 flex-1">
+                <iframe src="SERVICE PROPOSAL DOCUMENT.pdf" class="w-full h-[80vh] rounded-xl border border-white/10 bg-white"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal P3: Tambayan Menu Flyer (FLYER.pdf) -->
+    <div id="modal-p3" class="modal-wrapper">
+        <div class="modal-backdrop" onclick="closeModal('modal-p3')"></div>
+        <div class="modal-panel">
+            <div class="sticky top-0 bg-[#0d121f]/95 backdrop-blur border-b border-white/10 p-4 flex flex-wrap justify-between items-center gap-3 z-20">
+                <h3 class="font-heading font-bold text-lg">Tambayan Café Menu Flyer</h3>
+                <div class="flex items-center gap-2">
+                    <button onclick="switchView('p3', 'design')" id="btn-p3-design" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-cyan text-brand-dark transition cursor-pointer">Flyer View</button>
+                    <button onclick="switchView('p3', 'pdf')" id="btn-p3-pdf" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 text-white hover:bg-white/20 transition cursor-pointer">Original PDF File</button>
+                    <a href="FLYER.pdf" target="_blank" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-purple/30 border border-brand-purple/50 text-white hover:bg-brand-purple/50 transition"><i class="fa-solid fa-up-right-from-square mr-1"></i>Open PDF</a>
+                    <button onclick="closeModal('modal-p3')" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/20 flex items-center justify-center transition-colors">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="view-p3-design" class="p-6 md:p-10 flex flex-col items-center">
+                <div class="w-full max-w-md bg-[#7c5836] p-8 md:p-10 rounded-lg shadow-2xl text-center text-white border-4 border-[#4b331d] relative overflow-hidden">
+                    <h1 class="text-3xl md:text-4xl font-black tracking-wider uppercase mb-1">TAMBAYAN CAFÉ</h1>
+                    <p class="text-xs font-bold tracking-[0.25em] uppercase text-[#f3d5a5] mb-1">OPEN DAILY</p>
+                    <p class="text-sm font-extrabold tracking-widest text-white mb-6">9 AM TO 10 PM</p>
+
+                    <div class="my-6 py-4 relative flex flex-col items-center justify-center">
+                        <i class="fa-solid fa-mug-hot text-7xl text-white drop-shadow-md mb-2 transform -rotate-6"></i>
+                        <div class="text-5xl font-black tracking-widest text-[#f3d5a5] transform -rotate-12 drop-shadow">
+                            COFFEE
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 text-left font-sans mt-8 px-2">
+                        <div class="flex justify-between items-center border-b border-white/20 pb-2">
+                            <span class="font-extrabold text-xl tracking-wide">ESPRESSO</span>
+                            <span class="font-bold text-sm text-[#f3d5a5]">| PHP | <strong class="text-lg text-white">110</strong></span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-white/20 pb-2">
+                            <span class="font-extrabold text-xl tracking-wide">AMERICANO</span>
+                            <span class="font-bold text-sm text-[#f3d5a5]">| PHP | <strong class="text-lg text-white">120</strong></span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-white/20 pb-2">
+                            <span class="font-extrabold text-xl tracking-wide">CAPPUCCINO</span>
+                            <span class="font-bold text-sm text-[#f3d5a5]">| PHP | <strong class="text-lg text-white">150</strong></span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-white/20 pb-2">
+                            <span class="font-extrabold text-xl tracking-wide">LATTE</span>
+                            <span class="font-bold text-sm text-[#f3d5a5]">| PHP | <strong class="text-lg text-white">130</strong></span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-white/20 pb-2">
+                            <span class="font-extrabold text-xl tracking-wide">MOCHA</span>
+                            <span class="font-bold text-sm text-[#f3d5a5]">| PHP | <strong class="text-lg text-white">140</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-p3-pdf" class="hidden p-6 flex-1">
+                <iframe src="FLYER.pdf" class="w-full h-[80vh] rounded-xl border border-white/10 bg-white"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal P4: Tambayan Display Poster (POSTER.pdf) -->
+    <div id="modal-p4" class="modal-wrapper">
+        <div class="modal-backdrop" onclick="closeModal('modal-p4')"></div>
+        <div class="modal-panel">
+            <div class="sticky top-0 bg-[#0d121f]/95 backdrop-blur border-b border-white/10 p-4 flex flex-wrap justify-between items-center gap-3 z-20">
+                <h3 class="font-heading font-bold text-lg">Tambayan Café Display Poster</h3>
+                <div class="flex items-center gap-2">
+                    <button onclick="switchView('p4', 'design')" id="btn-p4-design" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-cyan text-brand-dark transition cursor-pointer">Poster View</button>
+                    <button onclick="switchView('p4', 'pdf')" id="btn-p4-pdf" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 text-white hover:bg-white/20 transition cursor-pointer">Original PDF File</button>
+                    <a href="POSTER.pdf" target="_blank" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-purple/30 border border-brand-purple/50 text-white hover:bg-brand-purple/50 transition"><i class="fa-solid fa-up-right-from-square mr-1"></i>Open PDF</a>
+                    <button onclick="closeModal('modal-p4')" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/20 flex items-center justify-center transition-colors">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="view-p4-design" class="p-6 md:p-10 flex flex-col items-center">
+                <div class="w-full max-w-[420px] bg-white py-14 px-10 text-center text-[#3e2723] border-4 border-[#3e2723] shadow-2xl rounded-sm relative">
+                    <div class="font-serif font-black text-5xl leading-none tracking-tight text-[#4e342e] mb-8">
+                        coffee<br>shop
+                    </div>
+                    
+                    <div class="w-52 h-52 mx-auto rounded-full bg-[#4e342e] text-white flex flex-col items-center justify-center shadow-lg border-4 border-[#8d6e63] mb-8 p-4">
+                        <i class="fa-solid fa-mug-saucer text-3xl text-[#f3d5a5] mb-2"></i>
+                        <h1 class="text-2xl font-black tracking-wider uppercase leading-tight">TAMBAYAN<br>CAFÉ</h1>
+                    </div>
+                    
+                    <div class="bg-[#4e342e] text-white font-black py-2.5 px-8 inline-block rounded-full mb-3 text-lg tracking-widest uppercase">
+                        OPEN DAILY
+                    </div>
+                    
+                    <p class="tracking-widest font-extrabold text-sm text-[#3e2723]">09:00 AM – 10:00 PM</p>
+                </div>
+            </div>
+
+            <div id="view-p4-pdf" class="hidden p-6 flex-1">
+                <iframe src="POSTER.pdf" class="w-full h-[80vh] rounded-xl border border-white/10 bg-white"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal P5: CLASSIC Editorial Magazine (UBANA_MagazineME (1).pdf • All 4 Pages) -->
+    <div id="modal-p5" class="modal-wrapper">
+        <div class="modal-backdrop" onclick="closeModal('modal-p5')"></div>
+        <div class="modal-panel">
+            <div class="sticky top-0 bg-[#0d121f]/95 backdrop-blur border-b border-white/10 p-4 flex flex-wrap justify-between items-center gap-3 z-20">
+                <h3 class="font-heading font-bold text-lg">CLASSIC Editorial Magazine (Vol. 01 • All 4 Pages)</h3>
+                <div class="flex items-center gap-2">
+                    <button onclick="switchView('p5', 'design')" id="btn-p5-design" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-cyan text-brand-dark transition cursor-pointer">All 4 Pages View</button>
+                    <button onclick="switchView('p5', 'pdf')" id="btn-p5-pdf" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 text-white hover:bg-white/20 transition cursor-pointer">Original PDF File</button>
+                    <a href="UBANA_MagazineME (1).pdf" target="_blank" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-purple/30 border border-brand-purple/50 text-white hover:bg-brand-purple/50 transition"><i class="fa-solid fa-up-right-from-square mr-1"></i>Open PDF</a>
+                    <button onclick="closeModal('modal-p5')" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/20 flex items-center justify-center transition-colors">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="view-p5-design" class="p-6 md:p-10 space-y-10">
+                <!-- PAGE 1: COVER -->
+                <div class="bg-[#0b0b0b] text-white p-8 md:p-12 max-w-2xl mx-auto shadow-2xl border border-white/15 relative overflow-hidden">
+                    <div class="flex justify-between items-center text-xs font-bold tracking-widest text-gray-400 mb-2">
+                        <span>SEPTEMBER 2026</span>
+                        <span>VOL. 01</span>
+                    </div>
+                    <h1 class="text-6xl md:text-8xl font-black uppercase text-[#b91c1c] tracking-tighter leading-none text-center border-b-4 border-[#b91c1c] pb-4 mb-8">
+                        CLASSIC
+                    </h1>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center my-8">
+                        <div class="space-y-6">
+                            <div class="border-l-4 border-[#b91c1c] pl-4">
+                                <p class="text-2xl font-black uppercase leading-tight">LIFE GOES ON<br>KEEP MOVING FORWARD</p>
+                            </div>
+                            <div class="bg-white/5 p-4 rounded border border-white/10">
+                                <p class="text-lg font-extrabold uppercase text-[#ef4444]">AKO LAM BA<br>TALAGA?</p>
+                            </div>
+                        </div>
+                        <div class="text-left md:text-right space-y-4">
+                            <p class="text-3xl font-black uppercase text-white leading-none">
+                                DO IT, BEFORE<br><span class="text-[#b91c1c]">IT LATES</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-right text-[10px] uppercase tracking-widest text-gray-500 mt-6">Page 01 • Cover</div>
+                </div>
+
+                <!-- PAGE 2: ABOUT ME -->
+                <div class="bg-[#121212] text-white p-8 md:p-12 max-w-2xl mx-auto shadow-2xl border border-white/15">
+                    <span class="text-xs font-bold uppercase tracking-widest text-[#b91c1c]">Editorial Feature</span>
+                    <h2 class="text-4xl font-black uppercase tracking-tight mt-1">ABOUT ME</h2>
+                    <p class="text-xs font-bold tracking-widest text-gray-400 mb-8">BY MARK CRIS UBANA</p>
+                    
+                    <div class="bg-black/60 p-8 border-l-4 border-[#b91c1c]">
+                        <p class="text-2xl font-extrabold uppercase leading-relaxed tracking-wide text-gray-100">
+                            "I WOULD LIKE TO EXPLORE LIKE SOMEPLACE I'VE NEVER BEEN AND ADVENTURE TO ENJOY."
+                        </p>
+                    </div>
+                    <div class="text-right text-[10px] uppercase tracking-widest text-gray-500 mt-6">Page 02 • About Me</div>
+                </div>
+
+                <!-- PAGE 3: ACHIEVEMENTS & GOALS -->
+                <div class="bg-[#121212] text-white p-8 md:p-12 max-w-2xl mx-auto shadow-2xl border border-white/15">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-black/50 p-6 border-t-4 border-[#b91c1c]">
+                            <h3 class="text-2xl font-black uppercase tracking-wider text-[#ef4444] mb-4">ACHIEVEMENTS</h3>
+                            <p class="text-gray-300 leading-relaxed text-sm">
+                                I want to achieve a body, I dream and to become healthy living and fit. I want to do more and enjoy living so I want to have a healthy lifestyle.
+                            </p>
+                        </div>
+                        <div class="bg-black/50 p-6 border-t-4 border-white">
+                            <h3 class="text-2xl font-black uppercase tracking-wider text-white mb-4">GOALS</h3>
+                            <p class="text-gray-300 leading-relaxed text-sm">
+                                I want to take a license and own a bike so I want to learn more to study in driving. I want to explore someplace I never been and to enjoy while driving.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-right text-[10px] uppercase tracking-widest text-gray-500 mt-6">Page 03 • Achievements &amp; Goals</div>
+                </div>
+
+                <!-- PAGE 4: LIFESTYLE, GYM, MOTORBIKE & LIGHTROOM -->
+                <div class="bg-[#121212] text-white p-8 md:p-12 max-w-2xl mx-auto shadow-2xl border border-white/15">
+                    <h3 class="text-xl font-black uppercase tracking-widest text-[#b91c1c] mb-4">PASSIONS &amp; LIFESTYLE</h3>
+                    <p class="text-gray-200 text-lg leading-relaxed bg-black/50 p-6 border border-white/10">
+                        I love to go in gym to become healthy and to achieve what I want to become. I also love to drive using motorbike and to go someplace to be alone. I also want to take an image of my self and to edit adobe lightroom with preset.
+                    </p>
+                    <div class="text-right text-[10px] uppercase tracking-widest text-gray-500 mt-6">Page 04 • Closing Spread</div>
+                </div>
+            </div>
+
+            <div id="view-p5-pdf" class="hidden p-6 flex-1">
+                <iframe src="UBANA_MagazineME (1).pdf" class="w-full h-[80vh] rounded-xl border border-white/10 bg-white"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal P6: FITNESS TO MAX Poster (MIDTERM_UBANA_CS3 (1).pdf) -->
+    <div id="modal-p6" class="modal-wrapper">
+        <div class="modal-backdrop" onclick="closeModal('modal-p6')"></div>
+        <div class="modal-panel">
+            <div class="sticky top-0 bg-[#0d121f]/95 backdrop-blur border-b border-white/10 p-4 flex flex-wrap justify-between items-center gap-3 z-20">
+                <h3 class="font-heading font-bold text-lg">FITNESS TO MAX Performance Poster</h3>
+                <div class="flex items-center gap-2">
+                    <button onclick="switchView('p6', 'design')" id="btn-p6-design" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-cyan text-brand-dark transition cursor-pointer">Poster View</button>
+                    <button onclick="switchView('p6', 'pdf')" id="btn-p6-pdf" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 text-white hover:bg-white/20 transition cursor-pointer">Original PDF File</button>
+                    <a href="MIDTERM_UBANA_CS3 (1).pdf" target="_blank" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-purple/30 border border-brand-purple/50 text-white hover:bg-brand-purple/50 transition"><i class="fa-solid fa-up-right-from-square mr-1"></i>Open PDF</a>
+                    <button onclick="closeModal('modal-p6')" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/20 flex items-center justify-center transition-colors">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="view-p6-design" class="p-6 md:p-10 flex flex-col items-center">
+                <div class="w-full max-w-xl bg-[#0a0a0a] text-white p-8 md:p-10 border-[10px] border-black font-sans relative shadow-2xl overflow-hidden">
+                    <div class="absolute top-0 right-0 w-40 h-40 bg-red-600 opacity-20 rounded-full blur-3xl"></div>
+                    
+                    <div class="flex justify-between items-center text-xs font-bold tracking-[0.25em] text-red-600 mb-3 relative z-10">
+                        <span>EST. 2026</span>
+                        <span>PERFORMANCE TRAINING</span>
+                    </div>
+                    
+                    <h1 class="text-6xl md:text-7xl font-black italic uppercase mb-6 leading-[0.88] tracking-tighter relative z-10">
+                        FITNESS<br>TO<br><span class="text-red-600">MAX</span>
+                    </h1>
+                    
+                    <p class="mb-8 font-medium text-sm md:text-base leading-relaxed border-l-4 border-red-600 pl-4 relative z-10 text-gray-300">
+                        This is not a gym. This is a proving ground. Every rep, every set, every burning second under the bar is a vote for the person you are becoming. We don't train bodies, we forge character.
+                    </p>
+                    
+                    <!-- THE METHOD -->
+                    <div class="relative z-10 bg-black/60 p-6 border border-white/10 mb-6">
+                        <h2 class="text-white font-black text-2xl mb-5 tracking-widest border-b border-white/20 pb-2">THE METHOD</h2>
+                        <div class="space-y-5">
+                            <div class="flex items-start gap-4">
+                                <span class="text-red-600 font-black text-3xl leading-none">01</span>
+                                <div>
+                                    <h3 class="font-black text-lg tracking-wider">STRENGTH</h3>
+                                    <p class="text-xs text-gray-400">Progressive overload. Compound lifts. Absolute intensity.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <span class="text-red-600 font-black text-3xl leading-none">02</span>
+                                <div>
+                                    <h3 class="font-black text-lg tracking-wider">ENDURANCE</h3>
+                                    <p class="text-xs text-gray-400">High-output cardio protocols built for real-world power.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <span class="text-red-600 font-black text-3xl leading-none">03</span>
+                                <div>
+                                    <h3 class="font-black text-lg tracking-wider">MINDSET</h3>
+                                    <p class="text-xs text-gray-400">Mental discipline is the muscle no barbell can train alone.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-red-600 text-black font-black text-center py-2 tracking-[0.25em] text-sm uppercase mb-6">
+                        PUSH HARDER • GO FURTHER
+                    </div>
+                    
+                    <!-- Schedule & Stats Grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 border-t-2 border-b-2 border-red-600 py-5 mb-6 text-center relative z-10 bg-white/5">
+                        <div>
+                            <p class="text-red-600 font-black text-2xl">7 AM</p>
+                            <p class="text-[10px] font-bold tracking-widest text-gray-300">FIRST SESSION</p>
+                        </div>
+                        <div>
+                            <p class="text-red-600 font-black text-2xl">10 PM</p>
+                            <p class="text-[10px] font-bold tracking-widest text-gray-300">LAST SESSION</p>
+                        </div>
+                        <div>
+                            <p class="text-white font-black text-2xl">365</p>
+                            <p class="text-[10px] font-bold tracking-widest text-gray-300">DAYS A YEAR</p>
+                        </div>
+                        <div>
+                            <p class="text-red-600 font-black text-2xl">0</p>
+                            <p class="text-[10px] font-bold tracking-widest text-gray-300">EXCUSES ALLOWED</p>
+                        </div>
+                    </div>
+
+                    <!-- THE CREED -->
+                    <div class="text-center mb-6 px-2">
+                        <p class="text-[10px] font-bold tracking-[0.3em] text-red-500 uppercase mb-2">THE FITNESS TO MAX CREED</p>
+                        <p class="italic text-sm text-gray-300">
+                            "Strength is not given. It is earned, session by session, scar by scar, day by relentless day."
+                        </p>
+                    </div>
+
+                    <!-- Keyword Strip -->
+                    <div class="text-[9px] font-black tracking-[0.2em] text-center text-gray-500 border-y border-white/10 py-2 mb-6 uppercase">
+                        DISCIPLINE • POWER • ENDURANCE • BAIT • FOCUS • STRENGTH • WILL • SPEED • FORM • CARDIO • REC
+                    </div>
+
+                    <!-- Footer CTA -->
+                    <div class="flex justify-between items-center relative z-10 pt-2">
+                        <div>
+                            <p class="font-black text-lg tracking-wider">FITNESS TO MAX</p>
+                            <p class="text-xs text-gray-400">@FitnesstoMax</p>
+                        </div>
+                        <span class="px-5 py-2 bg-red-600 text-white font-black text-xs tracking-widest uppercase">
+                            JOIN TODAY
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-p6-pdf" class="hidden p-6 flex-1">
+                <iframe src="MIDTERM_UBANA_CS3 (1).pdf" class="w-full h-[80vh] rounded-xl border border-white/10 bg-white"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal P7: URBAN THREADS Digital Campaign -->
+    <div id="modal-p7" class="modal-wrapper">
+        <div class="modal-backdrop" onclick="closeModal('modal-p7')"></div>
+        <div class="modal-panel">
+            <div class="sticky top-0 bg-[#0d121f]/90 backdrop-blur border-b border-white/10 p-4 flex justify-between items-center z-20">
+                <h3 class="font-heading font-bold text-lg">URBAN THREADS Digital Campaign</h3>
+                <button onclick="closeModal('modal-p7')" class="w-10 h-10 rounded-full bg-white/5 hover:bg-white/20 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6 md:p-10 flex flex-col items-center">
+                <div class="w-full max-w-2xl bg-[#090d16] text-white border border-white/10 shadow-2xl rounded-xl overflow-hidden font-sans">
+                    <div class="bg-gradient-to-b from-gray-800 to-black p-12 text-center border-b border-white/10 relative overflow-hidden">
+                        <div class="absolute top-6 left-6 font-black tracking-widest text-white/50 text-xs z-10">UT. // FW26</div>
+                        <h1 class="text-5xl md:text-7xl font-black italic uppercase tracking-tighter mb-4 mt-8 relative z-10 drop-shadow-lg">Urban Threads</h1>
+                        <p class="text-gray-300 font-medium tracking-widest text-sm relative z-10">STREETWEAR COLLECTION DROP</p>
+                        <button class="mt-10 px-10 py-4 bg-white text-black font-black uppercase tracking-widest hover:bg-gray-300 transition-all relative z-10">Shop the Drop</button>
+                    </div>
+                    <div class="p-8 grid grid-cols-2 gap-6 bg-[#0a0a0a]">
+                        <div class="aspect-[3/4] bg-[#111] rounded-lg border border-white/5 p-4 flex flex-col items-center justify-end text-center">
+                            <div class="w-3/4 h-3/4 bg-gray-800/50 rounded mb-auto flex items-center justify-center">
+                                <i class="fa-solid fa-shirt text-4xl text-white/20"></i>
+                            </div>
+                            <h4 class="font-bold text-sm tracking-wider uppercase mt-4">Midnight Hoodie</h4>
+                            <p class="text-gray-500 text-xs font-medium mt-1">PHP 2,499</p>
+                        </div>
+                        <div class="aspect-[3/4] bg-[#111] rounded-lg border border-white/5 p-4 flex flex-col items-center justify-end text-center">
+                            <div class="w-3/4 h-3/4 bg-gray-800/50 rounded mb-auto flex items-center justify-center">
+                                <i class="fa-solid fa-vest text-4xl text-white/20"></i>
+                            </div>
+                            <h4 class="font-bold text-sm tracking-wider uppercase mt-4">Utility Cargo</h4>
+                            <p class="text-gray-500 text-xs font-medium mt-1">PHP 3,150</p>
+                        </div>
+                    </div>
+                    <div class="p-10 bg-black text-center relative overflow-hidden">
+                        <h3 class="font-bold uppercase tracking-widest mb-2 relative z-10 text-xl">Join the Syndicate</h3>
+                        <p class="text-gray-500 text-xs mb-6 relative z-10">Get early access to exclusive drops and restocks.</p>
+                        <div class="flex max-w-sm mx-auto relative z-10 border border-white/20 rounded-sm overflow-hidden">
+                            <input type="text" placeholder="ENTER EMAIL" class="bg-[#111] px-4 py-3 w-full text-sm outline-none text-white placeholder-gray-600">
+                            <button class="bg-white text-black font-bold px-6 py-3 text-sm hover:bg-brand-cyan transition-colors">SUBSCRIBE</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Mechanics -->
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('flex');
+        }
+
+        // Play video when clicking custom overlay
+        function playVideoWithOverlay(videoId, overlayId) {
+            const video = document.getElementById(videoId);
+            const overlay = document.getElementById(overlayId);
+            if (video) {
+                video.play();
+                if (overlay) overlay.classList.add('hidden');
+            }
+        }
+
+        // Toggle play/pause when clicking directly on the video element
+        function toggleVideoPlay(videoId, overlayId) {
+            const video = document.getElementById(videoId);
+            const overlay = document.getElementById(overlayId);
+            if (!video) return;
+            if (video.paused) {
+                video.play();
+                if (overlay) overlay.classList.add('hidden');
+            } else {
+                video.pause();
+            }
+        }
+
+        // Scroll to the About Promo section and immediately play the video
+        function scrollToAndPlayPromo() {
+            const promoSection = document.getElementById('about-promo');
+            if (promoSection) {
+                promoSection.scrollIntoView({ behavior: 'smooth' });
+                setTimeout(() => {
+                    playVideoWithOverlay('about-promo-video', 'about-video-overlay');
+                }, 450);
+            }
+        }
+
+        function openModal(id, autoPlayVideo = false) {
+            const modal = document.getElementById(id);
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            if (id === 'modal-p1' && autoPlayVideo) {
+                const aboutVideo = document.getElementById('about-promo-video');
+                if (aboutVideo && !aboutVideo.paused) aboutVideo.pause();
+                playVideoWithOverlay('modal-promo-video', 'modal-video-overlay');
+            }
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+
+            if (id === 'modal-p1') {
+                const modalVideo = document.getElementById('modal-promo-video');
+                const modalOverlay = document.getElementById('modal-video-overlay');
+                if (modalVideo) modalVideo.pause();
+                if (modalOverlay) modalOverlay.classList.remove('hidden');
+            }
+        }
+
+        // Toggle between Designed View and Embedded PDF View inside each Modal
+        function switchView(key, mode) {
+            const designView = document.getElementById(`view-${key}-design`);
+            const pdfView = document.getElementById(`view-${key}-pdf`);
+            const designBtn = document.getElementById(`btn-${key}-design`);
+            const pdfBtn = document.getElementById(`btn-${key}-pdf`);
+
+            if (mode === 'pdf') {
+                designView.classList.add('hidden');
+                pdfView.classList.remove('hidden');
+                pdfBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-cyan text-brand-dark transition cursor-pointer';
+                designBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 text-white hover:bg-white/20 transition cursor-pointer';
+            } else {
+                pdfView.classList.add('hidden');
+                designView.classList.remove('hidden');
+                designBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-cyan text-brand-dark transition cursor-pointer';
+                pdfBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 text-white hover:bg-white/20 transition cursor-pointer';
+            }
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                document.querySelectorAll('.modal-wrapper.active').forEach(modal => closeModal(modal.id));
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Sync overlays with native video play/pause/ended events
+            [
+                { videoId: 'about-promo-video', overlayId: 'about-video-overlay' },
+                { videoId: 'modal-promo-video', overlayId: 'modal-video-overlay' }
+            ].forEach(({ videoId, overlayId }) => {
+                const videoEl = document.getElementById(videoId);
+                const overlayEl = document.getElementById(overlayId);
+                if (videoEl && overlayEl) {
+                    videoEl.addEventListener('play', () => overlayEl.classList.add('hidden'));
+                    videoEl.addEventListener('ended', () => overlayEl.classList.remove('hidden'));
+                }
+            });
+
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, { threshold: 0.35 });
+
+            sections.forEach(section => observer.observe(section));
+            
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-[#090d16]/80', 'backdrop-blur-lg', 'shadow-lg', 'border-b', 'border-white/10');
+                    navbar.classList.remove('p-4');
+                    navbar.classList.add('p-2');
+                } else {
+                    navbar.classList.remove('bg-[#090d16]/80', 'backdrop-blur-lg', 'shadow-lg', 'border-b', 'border-white/10');
+                    navbar.classList.add('p-4');
+                    navbar.classList.remove('p-2');
+                }
+            });
+        });
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const successOverlay = document.getElementById('form-success');
+            if (form.checkValidity()) {
+                successOverlay.classList.remove('hidden');
+                successOverlay.classList.add('flex');
+                form.reset();
+            }
+        }
+
+        function closeFormSuccess() {
+            const successOverlay = document.getElementById('form-success');
+            successOverlay.classList.add('hidden');
+            successOverlay.classList.remove('flex');
+        }
+    </script>
+</body>
+</html>
